@@ -1,0 +1,23 @@
+{
+  "name": "k8s-generator",
+  "version": "1.0.0",
+  "description": "A CLI tool to generate k8s resources.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idan-faibish/k8s-generator.git"
+  },
+  "type": "module",
+  "bin": {
+    "k8s-generator": "./k8s-generator.js"
+  },
+  "dependencies": {
+    "@kubernetes/client-node": "^0.18.1",
+    "commander": "^10.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.5"
+  }
+}
