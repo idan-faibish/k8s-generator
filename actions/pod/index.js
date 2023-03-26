@@ -10,7 +10,6 @@ const coreApi = kc.makeApiClient(k8s.CoreV1Api);
 const appsApi = kc.makeApiClient(k8s.AppsV1Api);
 
 export const createPod = async (pods, { namespace }) => {
-    console.log('11');
     createNamespace([namespace]);
     for (const pod of pods) {
         try {

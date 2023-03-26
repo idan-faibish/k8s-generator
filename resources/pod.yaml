@@ -5,9 +5,11 @@ metadata:
   labels:
     app: $POD_NAME
 spec:
-    containers:
-    - name: container
-      image: mbodenhamer/echoserver:latest
-      env:
-        - name: LISTEN_PORTS
-          value: "5001,5002,5003,5004,5005,5006,5007,5008,5009,5010"
+  containers:
+  - name: david-container
+    image: dfattakhov/multiport-server:latest
+    command: ["python3"]
+    args: ["/app/app.py"]
+    env:
+      - name: LISTENING_PORTS
+        value: "5000-6001"
