@@ -1,57 +1,41 @@
 #! /usr/bin/env node
 import { Command } from 'commander';
-import * as k8s from '@kubernetes/client-node';
+import { createNamespace, deleteNamespace } from './actions/namespace/index.js';
+import { createPod, deletePod } from './actions/pod/index.js';
 
 const program = new Command();
 program.version('0.0.1');
 
-const kc = new k8s.KubeConfig();
-kc.loadFromDefault();
-const coreApi = kc.makeApiClient(k8s.CoreV1Api);
-const appsApi = kc.makeApiClient(k8s.AppsV1Api);
+/////////////////////////////////
+////// Namespaces commands //////
+/////////////////////////////////
 
+// prettier-ignore
 program
-    .command('create-ns')
+    .command('create-namespace')
     .argument('<names...>', 'namespaces names to create')
-    .action(async (namespaces) => {
-        for (const namespace of namespaces) {
-            try {
-                await coreApi.createNamespace({ metadata: { name: namespace } });
-                console.log(`created namespace: ${namespace}`);
-            } catch (e) {
-                if (e.response.statusCode === 409) {
-                    console.log(`failed to create namespace: ${namespace} (already exists)`);
-                    continue;
-                }
+    .action(createNamespace);
 
-                throw e;
-            }
-        }
-    });
+// prettier-ignore
+program
+    .command('delete-namespace')
+    .argument('<names...>', 'namespaces names to delete')
+    .action(deleteNamespace);
 
-// TODO: create deployment (in namespace)
-// TODO: create pod (in namespace)
+///////////////////////////
+////// Pods commands //////
+///////////////////////////
 
 program
-    .command('delete-ns')
-    .argument('<names...>', 'namespaces names to delete')
-    .action(async (namespaces) => {
-        for (const namespace of namespaces) {
-            try {
-                await coreApi.deleteNamespace(namespace);
-                console.log(`deleted namespace: ${namespace}`);
-            } catch (e) {
-                if (e.response.statusCode === 404) {
-                    console.log(`failed to delete namespace: ${namespace} (not found)`);
-                    continue;
-                }
+    .command('create-pod')
+    .argument('<names...>', 'pods names')
+    .requiredOption('-n, --namespace <namespace>', 'namespace name')
+    .action(createPod);
 
-                throw e;
-            }
-        }
-    });
-
-// TODO: delete deployment (in namespace)
-// TODO: delete pod (in namespace)
+program
+    .command('delete-pod')
+    .argument('<names...>', 'pods names')
+    .requiredOption('-n, --namespace <namespace>', 'namespace name')
+    .action(deletePod);
 
 program.parse(process.argv);
