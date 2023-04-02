@@ -1,6 +1,7 @@
 import * as k8s from '@kubernetes/client-node';
 import fs from 'fs';
 import yaml from 'js-yaml';
+import { portsParser } from '../../utils/index.js';
 
 import { createNamespace } from '../namespace/index.js';
 
@@ -9,15 +10,22 @@ kc.loadFromDefault();
 const coreApi = kc.makeApiClient(k8s.CoreV1Api);
 const appsApi = kc.makeApiClient(k8s.AppsV1Api);
 
-export const createPod = async (pods, { namespace }) => {
-    createNamespace([namespace]);
+export const createPod = async (pods, { namespace, ports }) => {
+    if (!portsParser(ports).isValid) {
+        console.log('invalid ports range');
+        return;
+    }
+
+    await createNamespace([namespace]);
     for (const pod of pods) {
         try {
-            const descriptor = yaml.load(fs.readFileSync('resources/pod.yaml'));
-            await coreApi.createNamespacedPod(
-                namespace,
-                JSON.parse(JSON.stringify(descriptor).replaceAll('$POD_NAME', pod))
-            );
+            const podYaml = yaml.load(fs.readFileSync('resources/pod.yaml'));
+            // prettier-ignore
+            const podYamlString = JSON.stringify(podYaml)
+                .replaceAll('$POD_NAME', pod)
+                .replaceAll('$PORTS', ports)
+            await coreApi.createNamespacedPod(namespace, JSON.parse(podYamlString));
+
             console.log(`created pod: ${pod}`);
         } catch (e) {
             if (e.response.statusCode === 404) {

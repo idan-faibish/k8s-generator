@@ -12,4 +12,4 @@ spec:
     args: ["/app/app.py"]
     env:
       - name: LISTENING_PORTS
-        value: "5000-6001"
+        value: "$PORTS"

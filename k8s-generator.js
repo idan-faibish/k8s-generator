@@ -29,6 +29,7 @@ program
     .command('create-pod')
     .argument('<names...>', 'pods names')
     .requiredOption('-n, --namespace <namespace>', 'namespace name')
+    .requiredOption('--ports <ports>', 'ports to listen to', '5000-6001')
     .action(createPod);
 
 program

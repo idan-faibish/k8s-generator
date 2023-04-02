@@ -1,6 +1,6 @@
 # K8s generator
 
-A CLI tool to generate k8s resources.
+A CLI tool to generate k8s namespaces/pods and create traffic.
 
 ## Prerequisites
 
@@ -10,19 +10,40 @@ A CLI tool to generate k8s resources.
 
 1. Clone this repository.
 2. `npm ci`
+3. `npm link`
 
 ## Usage
 
-TBD
+At any time, you can run `k8s-generator --help` to see the available commands.
 
-### Command1 description
+## Create/Delete resources commands
 
-`k8s-generator command1`
+##### Create a namespaces(s)
 
-### Command2 description
+`k8s-generator create-namespace ns-name1 ns-name2 ...`
 
-`k8s-generator command2`
+##### Delete a namespace(s)
 
-### Command3 description
+`k8s-generator delete-namespace ns-name1 ns-name2 ...`
 
-`k8s-generator command3`
+##### Create a pod(s) in a namespace (if the namespace doesn't exist, it will be created)
+
+`k8s-generator create-pod -n ns-name pod-name1 pod-name2 ... --ports FROM_PORT-TO_PORT`
+
+##### Delete a pod(s) in a namespace
+
+`k8s-generator delete-pod -n ns-name pod-name1 pod-name2 ...`
+
+## Traffic generation commands
+
+##### Generate internal traffic (from pods to pods in the same namespace)
+
+`k8s-generator internal-traffic -n ns-name --from-pods pod1 pod2 --to-pods pod3 pod4 --ports FROM_PORT-TO_PORT`
+
+##### Generate egress traffic (from pods to external addresses)
+
+`k8s-generator egress-traffic -n ns-name --from-pods pod1 pod2 --addresses google.com amazon.com`
+
+##### Generate cross namespace traffic (from pods in one namespace to pods in another namespace)
+
+`k8s-generator cross-namespace-traffic --from-namespace ns-name1 --to-namespace ns-name2 --from-pods pod1 pod2 --to-pods pod3 pod4 --ports FROM_PORT-TO_PORT`
