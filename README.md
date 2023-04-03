@@ -1,4 +1,4 @@
-# K8s generator
+# K8s generator1
 
 A CLI tool to generate k8s namespaces/pods and create traffic.
 
