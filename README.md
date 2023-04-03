@@ -9,8 +9,8 @@ A CLI tool to generate k8s namespaces/pods and create traffic.
 ## Installation
 
 1. Clone this repository.
-2. `npm ci`
-3. `npm link`
+2. `npm ci` (from inside the repo folder)
+3. `npm link` (from inside the repo folder)
 
 ## Usage
 
