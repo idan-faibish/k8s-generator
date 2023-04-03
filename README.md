@@ -1,5 +1,6 @@
 # K8s generator
 
+test
 A CLI tool to generate k8s namespaces/pods and create traffic.
 
 ## Prerequisites
