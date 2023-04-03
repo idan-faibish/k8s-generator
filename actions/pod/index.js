@@ -1,3 +1,6 @@
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
 import * as k8s from '@kubernetes/client-node';
 import fs from 'fs';
 import yaml from 'js-yaml';
@@ -10,6 +13,9 @@ kc.loadFromDefault();
 const coreApi = kc.makeApiClient(k8s.CoreV1Api);
 const appsApi = kc.makeApiClient(k8s.AppsV1Api);
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 export const createPod = async (pods, { namespace, ports }) => {
     if (!portsParser(ports).isValid) {
         console.log('invalid ports range');
@@ -19,7 +25,7 @@ export const createPod = async (pods, { namespace, ports }) => {
     await createNamespace([namespace]);
     for (const pod of pods) {
         try {
-            const podYaml = yaml.load(fs.readFileSync('resources/pod.yaml'));
+            const podYaml = yaml.load(fs.readFileSync(resolve(__dirname, '../../resources/pod.yaml')));
             // prettier-ignore
             const podYamlString = JSON.stringify(podYaml)
                 .replaceAll('$POD_NAME', pod)
